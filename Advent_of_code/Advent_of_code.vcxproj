@@ -88,6 +88,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -116,6 +117,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -145,10 +147,10 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Day1\Day1_a.h" />
-    <ClInclude Include="Day2\Day2.h" />
-    <ClInclude Include="Day3\Day3.h" />
-    <ClInclude Include="Day4\Day4.h" />
+    <ClInclude Include="2015\Day1\Day1_a.h" />
+    <ClInclude Include="2015\Day2\Day2.h" />
+    <ClInclude Include="2015\Day3\Day3.h" />
+    <ClInclude Include="2015\Day4\Day4.h" />
     <ClInclude Include="Utils\global.h" />
     <ClInclude Include="Utils\md5.h" />
     <ClInclude Include="stdafx.h" />
@@ -157,9 +159,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Advent_of_code.cpp" />
-    <ClCompile Include="Day2\Day2.cpp" />
-    <ClCompile Include="Day3\Day3.cpp" />
-    <ClCompile Include="Day4\Day4.cpp" />
+    <ClCompile Include="2015\Day2\Day2.cpp" />
+    <ClCompile Include="2015\Day3\Day3.cpp" />
+    <ClCompile Include="2015\Day4\Day4.cpp" />
     <ClCompile Include="Utils\md5c.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

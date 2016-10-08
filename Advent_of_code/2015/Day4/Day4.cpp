@@ -1,9 +1,9 @@
 
 #include "Day4.h"
 
-#include "../Utils/TMD5.h"
+#include "Utils/TMD5.h"
 
-#include "../Utils/md5.h"
+#include "Utils/md5.h"
 // 
 // /* MDDRIVER.C - test driver for MD2, MD4 and MD5
 // */

@@ -2,10 +2,10 @@
 //
 
 #include "stdafx.h"
-#include "Day1/Day1_a.h"
-#include "Day2/Day2.h"
-#include "Day3/Day3.h"
-#include "Day4/Day4.h"
+#include "2015/Day1/Day1_a.h"
+#include "2015/Day2/Day2.h"
+#include "2015/Day3/Day3.h"
+#include "2015/Day4/Day4.h"
 
 #include <sstream>
 #include <fstream>
