@@ -3,7 +3,8 @@
 #define TMD5_h__
 
 #include <istream>
-#include <array>
+//#include <array>
+#include <vector>
 
 
 class TMD5
@@ -17,7 +18,7 @@ public:
 
 	TMD5 &operator +=(std::string const &pstr);
 
-	unsigned char Value(unsigned int pid) const					{ return m_digest[pid]; }
+	char Value(unsigned int pid) const					{ return m_digest[pid]; }
 
 	std::string String() const;
 
@@ -26,14 +27,24 @@ private:
 	void _CalcMD5();
 
 	void _MD5Init();
-	void _MD5Update(unsigned char const *, uint32_t);
+	//void _MD5Update(char const *, uint32_t);
+	void _MD5Update (std::vector<char> const &pinput);
+// 	void _MD5Update ( std::input_iterator_tag const &pstart
+// 					, std::input_iterator_tag const &pend
+// 					);
+	void _MD5Update (std::vector<char> const &pinput, uint32_t inputLen);
 	void _MD5Final();
 
 
-	void _MD5Transform(uint32_t state[4], unsigned char const [64]);
-	void _Encode(unsigned char *, const std::uint32_t *, uint32_t);
+	//void _MD5Transform(uint32_t state[4], char const [64]);
+	//void _MD5Transform (uint32_t state[4], std::array<char, 64> block);
+	void _MD5Transform(char const [64]);
+	//void _MD5Transform (std::array<char, 64> block);
+	//void _Encode(char *, const std::uint32_t *, uint32_t);
+	std::vector<char> _Encode(std::uint64_t const &input);
+
 //	void _Decode(std::uint32_t *, unsigned char const *, uint32_t);
-	void _MD5_memcpy(unsigned char *, unsigned char const *, uint32_t);
+	void _MD5_memcpy(char *, char const *, uint32_t);
 //	void _MD5_memset(unsigned char *, int, uint32_t);
 
 private:
@@ -42,8 +53,10 @@ private:
 	// 	struct MD5_CTX
 	// 	{
 	//uint32_t state[4];                                   /* state (ABCD) */
-	uint32_t m_count[2];					/* number of bits, modulo 2^64 (lsb first) */
-	unsigned char m_buffer[64];                         /* input buffer */
+	//uint32_t m_count[2];					/* number of bits, modulo 2^64 (lsb first) */
+	uint64_t m_bitcount;					/* number of bits, modulo 2^64 (lsb first) */
+	char m_buffer[64];                         /* input buffer */
+	//std::array<char, 64> m_buffer;
 														//};
 														//std::array<unsigned int, 32> m_MD5;
 	//std::array<unsigned int, 4> m_MD5;
@@ -53,7 +66,9 @@ private:
 
 private:
 
-	static unsigned char PADDING[64];	// = {
+	//static char PADDING[64];	// = {
+	static std::vector<char> PADDING;
+	//static std::array<char, 64> PADDING;
 	// 		0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	// 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	// 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
