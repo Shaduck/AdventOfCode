@@ -13,7 +13,7 @@ std::vector<char> TMD5::PADDING = {
 };
 
 TMD5::TMD5()
-	: m_digest(reinterpret_cast<unsigned char *>(m_MD5))
+	//: m_digest(reinterpret_cast<unsigned char *>(m_MD5))
 {
 	_MD5Init();
 }
@@ -24,7 +24,7 @@ TMD5::TMD5()
 // }
 
 TMD5::TMD5(std::string const &pin)
-	: m_digest(reinterpret_cast<unsigned char *>(m_MD5))
+	//: m_digest(reinterpret_cast<unsigned char *>(m_MD5))
 {
 	_MD5Init();
 	//_MD5Update(buffer.data(), buffer.size());
@@ -34,7 +34,6 @@ TMD5::TMD5(std::string const &pin)
 
 	_MD5Final();
 
-	_rotr(w, 3);
 }
 
 
@@ -174,10 +173,11 @@ context.
 
 void TMD5::_MD5Update(std::vector<char> const &pinput)
 {
-	_MD5Update(pinput, pinput.size());
+	//_MD5Update(pinput, pinput.size());
+	_MD5Update(pinput.begin(), pinput.end());
 }
 
-// void TMD5::_MD5Update (std::input_iterator_tag const &pstart, std::input_iterator_tag const &pend)
+// void TMD5::_O_MD5Update (std::vector<char> const &pinput, uint32_t inputLen)
 // {
 // 	//uint32_t i;			//, index;		//, partLen;
 // 
@@ -222,7 +222,9 @@ void TMD5::_MD5Update(std::vector<char> const &pinput)
 // 	_MD5_memcpy(&m_buffer[index], &pinput.data()[i], inputLen-i);
 // }
 
-void TMD5::_MD5Update (std::vector<char> const &pinput, uint32_t inputLen)
+
+void TMD5::_MD5Update(std::vector<char>::const_iterator pstart
+						   , std::vector<char>::const_iterator const &pend)
 {
 	//uint32_t i;			//, index;		//, partLen;
 
@@ -238,34 +240,54 @@ void TMD5::_MD5Update (std::vector<char> const &pinput, uint32_t inputLen)
 	// 		m_count[1]++;
 	// 	}
 	// 	m_count[1] += (inputLen >> 29);
-	m_bitcount += inputLen * 8;
+	
+	uint32_t inputLen = 0;
 
-	uint32_t partLen = 64 - index;
+//	uint32_t partLen = 64 - index;
 
-	uint32_t i = 0;
+//	uint32_t i = 0;
+
+	while(pstart != pend)
+	{
+		m_block[index] = *pstart;
+
+		++index;
+		++pstart;
+		++inputLen;
+
+		if(index >= 64)
+		{
+			_MD5Transform(m_block);
+			index = 0;
+		}
+	}
 
 	/* Transform as many times as possible.
 	*/
-	if (inputLen >= partLen)
-	{
-		_MD5_memcpy(&m_buffer[index], pinput.data(), partLen);
-		_MD5Transform (m_buffer);
-
-		for (i = partLen; i + 63 < inputLen; i += 64)
-		{
-			_MD5Transform (&pinput.data()[i]);
-		}
-
-		index = 0;
-	}
-// 	else
+// 	if (inputLen >= partLen)
 // 	{
-// 		i = 0;
+// 		_MD5_memcpy(&m_buffer[index], pinput.data(), partLen);
+// 		_MD5Transform (m_buffer);
+// 
+// 		for (i = partLen; i + 63 < inputLen; i += 64)
+// 		{
+// 			_MD5Transform (&pinput.data()[i]);
+// 		}
+// 
+// 		index = 0;
 // 	}
+// 	// 	else
+// 	// 	{
+// 	// 		i = 0;
+// 	// 	}
+// 
+// 	/* Buffer remaining input */
+// 	_MD5_memcpy(&m_buffer[index], &pinput.data()[i], inputLen-i);
 
-	/* Buffer remaining input */
-	_MD5_memcpy(&m_buffer[index], &pinput.data()[i], inputLen-i);
+	m_bitcount += inputLen * 8;
 }
+
+
 
 /* MD5 finalization. Ends an MD5 message-digest operation, writing the
 the message digest and zeroizing the context.
@@ -287,10 +309,12 @@ void TMD5::_MD5Final ()
 	//index = (m_count[0] >> 3) & 0x3f;
 	index = (m_bitcount / 8) % 64; 
 	padLen = (index < 56) ? (56 - index) : (120 - index);
-	_MD5Update (PADDING, padLen);
+	//_MD5Update (PADDING, padLen);
+	_MD5Update (PADDING.begin(), PADDING.begin() + padLen);
 
 	/* Append length (before padding) */
-	_MD5Update (bits, 8);
+	//_MD5Update (bits, 8);
+	_MD5Update (bits.begin(), bits.begin() + 8);
 
 	/* Store state in digest */
 //	_Encode (m_digest, m_MD5, 16);

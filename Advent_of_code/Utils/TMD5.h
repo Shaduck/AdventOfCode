@@ -32,7 +32,14 @@ private:
 // 	void _MD5Update ( std::input_iterator_tag const &pstart
 // 					, std::input_iterator_tag const &pend
 // 					);
-	void _MD5Update (std::vector<char> const &pinput, uint32_t inputLen);
+//	void _O_MD5Update (std::vector<char> const &pinput, uint32_t inputLen);
+
+	void _MD5Update(std::vector<char>::const_iterator pstart
+					, std::vector<char>::const_iterator const &pend);
+
+// 	template <class TTInputIterator>
+// 	void _Tmpl_MD5Update(TTInputIterator const &pstart, TTInputIterator const &pend);
+
 	void _MD5Final();
 
 
@@ -55,14 +62,29 @@ private:
 	//uint32_t state[4];                                   /* state (ABCD) */
 	//uint32_t m_count[2];					/* number of bits, modulo 2^64 (lsb first) */
 	uint64_t m_bitcount;					/* number of bits, modulo 2^64 (lsb first) */
+
 	char m_buffer[64];                         /* input buffer */
+
+	union
+	{
+		char m_block[64];
+		std::uint32_t m_xdata[16];
+	};
+
 	//std::array<char, 64> m_buffer;
 														//};
 														//std::array<unsigned int, 32> m_MD5;
 	//std::array<unsigned int, 4> m_MD5;
-	uint32_t m_MD5[4];
+	//uint32_t m_MD5[4];
 	//unsigned char m_digest[16];
-	unsigned char *m_digest;
+	//unsigned char *m_digest;
+
+	union
+	{
+		uint32_t m_MD5[4];
+		unsigned char m_digest[16];
+		//unsigned char *m_digest;
+	};
 
 private:
 
@@ -98,27 +120,98 @@ private:
 
 	// ROTATE_LEFT rotates x left n bits.
 	std::uint32_t _BitRotation_Left(std::uint32_t x, int n)				{ return ((x << n) | (x >> (32 - n))); }
+	//std::uint32_t _BitRotation_Left(std::uint32_t x, int n)					{ return _rotl(x, n); }
 
 
-	std::uint32_t _FF(std::uint32_t a, std::uint32_t b, std::uint32_t c, std::uint32_t d,
-													std::uint32_t x, int s, std::uint32_t ac)
-										{ return _BitRotation_Left(a + _F(b, c, d) + x + ac, s) + b; }
+	std::uint32_t _FF ( std::uint32_t a
+					   , std::uint32_t b
+					   , std::uint32_t c
+					   , std::uint32_t d
+					   , std::uint32_t x
+					   , std::uint32_t s
+					   , std::uint32_t ac
+						)
+						{ return _BitRotation_Left(a + _F(b, c, d) + x + ac, s) + b; }
 
-	std::uint32_t _GG(std::uint32_t a, std::uint32_t b, std::uint32_t c, std::uint32_t d,
-													std::uint32_t x, int s, std::uint32_t ac)
-										{ return _BitRotation_Left(a + _G(b, c, d) + x + ac, s) + b; }
+	std::uint32_t _GG ( std::uint32_t a
+					   , std::uint32_t b
+					   , std::uint32_t c
+					   , std::uint32_t d
+					   , std::uint32_t x
+					   , std::uint32_t s
+					   , std::uint32_t ac
+						)
+						{ return _BitRotation_Left(a + _G(b, c, d) + x + ac, s) + b; }
 
-	std::uint32_t _HH(std::uint32_t a, std::uint32_t b, std::uint32_t c, std::uint32_t d,
-													std::uint32_t x, int s, std::uint32_t ac)
-										{ return _BitRotation_Left(a + _H(b, c, d) + x + ac, s) + b; }
+	std::uint32_t _HH ( std::uint32_t a
+					   , std::uint32_t b
+					   , std::uint32_t c
+					   , std::uint32_t d
+					   , std::uint32_t x
+					   , std::uint32_t s
+					   , std::uint32_t ac
+						)
+						{ return _BitRotation_Left(a + _H(b, c, d) + x + ac, s) + b; }
 
-	std::uint32_t _II(std::uint32_t a, std::uint32_t b, std::uint32_t c, std::uint32_t d,
-													std::uint32_t x, int s, std::uint32_t ac)
-										{ return _BitRotation_Left(a + _I(b, c, d) + x + ac, s) + b; }
+	std::uint32_t _II (  std::uint32_t a
+					   , std::uint32_t b
+					   , std::uint32_t c
+					   , std::uint32_t d
+					   , std::uint32_t x
+					   , std::uint32_t s
+					   , std::uint32_t ac
+						)
+						{ return _BitRotation_Left(a + _I(b, c, d) + x + ac, s) + b; }
 
 
 };
 
+//template <class TTInputIterator>
+// void TMD5::_Tmpl_MD5Update(TTInputIterator const &pstart, TTInputIterator const &pend)
+// {
+// 	//uint32_t i;			//, index;		//, partLen;
+// 
+// 	/* Compute number of bytes mod 64 */
+// 	// index = (m_count[0] >> 3) & 0x3F;
+// 	//index = (m_count[0] / 8) % 64;
+// 	uint32_t index = (m_bitcount / 8) % 64; 
+// 
+// 	/* Update number of bits */
+// 	// 	if ((m_count[0] += (inputLen << 3))
+// 	// 		< (inputLen << 3))
+// 	// 	{
+// 	// 		m_count[1]++;
+// 	// 	}
+// 	// 	m_count[1] += (inputLen >> 29);
+// 	m_bitcount += inputLen * 8;
+// 
+// 	uint32_t partLen = 64 - index;
+// 
+// 	uint32_t i = 0;
+// 
+// 	/* Transform as many times as possible.
+// 	*/
+// 	if (inputLen >= partLen)
+// 	{
+// 		_MD5_memcpy(&m_buffer[index], pinput.data(), partLen);
+// 		_MD5Transform (m_buffer);
+// 
+// 		for (i = partLen; i + 63 < inputLen; i += 64)
+// 		{
+// 			_MD5Transform (&pinput.data()[i]);
+// 		}
+// 
+// 		index = 0;
+// 	}
+// 	// 	else
+// 	// 	{
+// 	// 		i = 0;
+// 	// 	}
+// 
+// 	/* Buffer remaining input */
+// 	_MD5_memcpy(&m_buffer[index], &pinput.data()[i], inputLen-i);
+// 
+// }
 
 #endif // TMD5_h__
 

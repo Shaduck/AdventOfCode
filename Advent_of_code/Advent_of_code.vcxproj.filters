@@ -33,16 +33,25 @@
     <ClInclude Include="Utils\TMD5.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="2015\Day1\Day1_a.h">
+    <ClInclude Include="2015\Day_01\Day_01_a.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="2015\Day2\Day2.h">
+    <ClInclude Include="2015\Day_02\Day_02.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="2015\Day3\Day3.h">
+    <ClInclude Include="2015\Day_03\Day_03.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="2015\Day4\Day4.h">
+    <ClInclude Include="2015\Day_04\Day_04.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="2015\Day_05\Day_05.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="2015\Day_06\Day_06.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="2015\Day_07\Day_07.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -59,13 +68,22 @@
     <ClCompile Include="Utils\TMD5.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="2015\Day2\Day2.cpp">
+    <ClCompile Include="2015\Day_02\Day_02.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="2015\Day3\Day3.cpp">
+    <ClCompile Include="2015\Day_03\Day_03.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="2015\Day4\Day4.cpp">
+    <ClCompile Include="2015\Day_04\Day_04.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="2015\Day_05\Day_05.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="2015\Day_06\Day_06.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="2015\Day_07\Day_07.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

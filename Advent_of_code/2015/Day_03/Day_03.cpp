@@ -1,7 +1,9 @@
-#include "Day3.h"
+#include "Day_03.h"
 
-#include <xutility>
+//#include <xutility>
 
+#include <sstream>
+#include <fstream>
 
 namespace nsDay03
 {
@@ -82,6 +84,29 @@ void _Deliverer::Move(char pdir)
 		int a = 0;
 	}
 	}
+}
+
+void CalcSolution()
+{
+	T2DMap test0(std::istringstream(std::string(">")));
+	int t0 = test0.NHouses();
+
+	T2DMap test1(std::istringstream(std::string("^v")));
+	int t1 = test1.NHouses();
+
+	T2DMap test2(std::istringstream(std::string("^>v<")));
+	int t2 = test2.NHouses();
+
+	T2DMap test3(std::istringstream(std::string("^v^v^v^v^v")));
+	int t3 = test3.NHouses();
+
+	std::ifstream file("Day_03/input.txt");
+	if(!file.good())
+	{
+		throw std::exception("File not found!");
+	}
+	T2DMap test4(file);
+	int t4 = test4.NHouses();
 }
 
 }

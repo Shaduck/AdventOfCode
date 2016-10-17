@@ -49,6 +49,8 @@ private:
 	std::array<_Deliverer, N_DELIVERERS> m_LSanta;
 };
 
+void CalcSolution();
+
 }
 
 #endif // Day2_h__

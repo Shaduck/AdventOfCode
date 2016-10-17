@@ -11,6 +11,8 @@ namespace nsDay04
 
 bool TestMD5();
 
+void CalcSolution();
+
 }
 
 #endif // Day2_h__

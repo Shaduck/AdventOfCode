@@ -2,10 +2,13 @@
 //
 
 #include "stdafx.h"
-#include "2015/Day1/Day1_a.h"
-#include "2015/Day2/Day2.h"
-#include "2015/Day3/Day3.h"
-#include "2015/Day4/Day4.h"
+#include "2015/Day_01/Day_01_a.h"
+#include "2015/Day_02/Day_02.h"
+#include "2015/Day_03/Day_03.h"
+#include "2015/Day_04/Day_04.h"
+#include "2015/Day_05/Day_05.h"
+#include "2015/Day_06/Day_06.h"
+#include "2015/Day_07/Day_07.h"
 
 #include <sstream>
 #include <fstream>
@@ -14,45 +17,31 @@ void Day01();
 void Day02();
 void Day03();
 void Day04();
-
+void Day05();
 
 int main()
 {
 	
-	Day04();
+	nsDay07::CalcSolution();
 
 
 	return 0;
 }
 
+void Day05()
+{
+	nsDay05::CalcSolution2();
+}
+
 void Day04()
 {
-	nsDay04::TestMD5();
-
+	//nsDay04::TestMD5();
+	nsDay04::CalcSolution();
 }
 
 void Day03()
 {
-	using namespace	nsDay03;
-	T2DMap test0(std::istringstream(std::string(">")));
-	int t0 = test0.NHouses();
-
-	T2DMap test1(std::istringstream(std::string("^v")));
-	int t1 = test1.NHouses();
-
-	T2DMap test2(std::istringstream(std::string("^>v<")));
-	int t2 = test2.NHouses();
-
-	T2DMap test3(std::istringstream(std::string("^v^v^v^v^v")));
-	int t3 = test3.NHouses();
-
-	std::ifstream file("Day3/input.txt");
-	if(!file.good())
-	{
-		throw std::exception("File not found!");
-	}
-	T2DMap test4(file);
-	int t4 = test4.NHouses();
+	nsDay03::CalcSolution();
 }
 
 void Day02()
