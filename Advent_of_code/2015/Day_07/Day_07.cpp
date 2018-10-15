@@ -1,6 +1,12 @@
 #include "Day_07.h"
 
 //#include <vector>
+#include <sstream>
+
+#include <fstream>
+
+// #include <boost/algorithm/string.hpp>
+// #include <boost/tokenizer.hpp>
 
 namespace nsDay07
 {
@@ -13,115 +19,96 @@ namespace nsDay07
 
 //////////////////////////////////////////////////////////////////////////
 
-std::string ExtractToken(std::string &pstr, std::string const &delim)
-{
-	auto pos = pstr.find(delim);
-	std::string ret = pstr.substr(0, pos);
-	pstr = pstr.substr(pos + delim.size());
 
-	return ret;
-}
-
-
-void ParseLine(std::string pline, TGrid_Int &pgrid)
-{
-	enum class ecmd
-	{
-		NONE,
-		SET_ON,
-		SET_OFF,
-		TOGGLE
-	};
-
-	ecmd operation = ecmd::NONE;
-
-	// turn on 489,959 through 759,964
-	std::string delim(" ");
-
-	std::string work = ExtractToken(pline, delim);
-
-	if(work == "turn")
-	{
-		work = ExtractToken(pline, delim);
-		if(work == "on")
-		{
-			operation = ecmd::SET_ON;
-		}
-		else if(work == "off")
-		{
-			operation = ecmd::SET_OFF;
-		}
-	}
-	else if(work == "toggle")
-	{
-		operation = ecmd::TOGGLE;
-	}
-
-	_Coord startcoord;
-	work = ExtractToken(pline, delim);
-	startcoord.x = std::stoi(ExtractToken(work, ","));
-	startcoord.y = std::stoi(ExtractToken(work, ","));
-
-	work = ExtractToken(pline, delim);
-	if(work != "through")
-	{
-		int error = 0;
-	}
-
-	_Coord endcoord;
-	work = ExtractToken(pline, delim);
-	endcoord.x = std::stoi(ExtractToken(work, ","));
-	endcoord.y = std::stoi(ExtractToken(work, ","));
-
-	switch(operation)
-	{
-	case ecmd::SET_ON:
-		pgrid.Set(startcoord, endcoord, true);
-		break;
-	case ecmd::SET_OFF:
-		pgrid.Set(startcoord, endcoord, false);
-		break;
-	case ecmd::TOGGLE:
-		pgrid.Toggle(startcoord, endcoord);
-		break;
-
-	case ecmd::NONE:
-	default:
-		int error = 0;
-		break;
-	}
-
-}
+//////////////////////////////////////////////////////////////////////////
 
 void CalcSolution()
 {
 	std::string str;
-	int nice = 0;
+	//	int nice = 0;
 
-	std::string teststr(
-						"123->x\n"
-						"456->y\n"
-						"x AND y->d\n"
-						"x OR y->e\n"
-						"x LSHIFT 2->f\n"
-						"y RSHIFT 2->g\n"
-						"NOT x->h\n"
-						"NOT y->i\n"
-						);
+	const std::string teststr(
+		"NOT y->i\n"
+		"x LSHIFT 2->f\n"
+		"123->hf\n"
+		"y RSHIFT 2->g\n"
+		"hf -> x\n"
+		"x OR y->e\n"
+		"456->y\n"
+		"NOT x->h\n"
+		"x AND y->d\n"
+	);
 
+	TCircuit circuit;
 
+	/**
+	std::istringstream stream(teststr);
+	/*/
+	std::ifstream stream("2015/Day_07/input.txt");
+	//*/
 
-	std::ifstream file("2015/Day_07/input.txt");
-	while(file.good())
+	while(stream.good())
 	{
-		std::getline(file, str);
+		std::getline(stream, str);
 
+		auto currwire = TWire::Create_Wire(str);
 
+		if(currwire)
+		{
+			circuit.AddWire(std::move(*currwire));
+		}
 	}
+
+	// Test
+
+	/**
+	auto d = circuit.Value("d");
+	auto e = circuit.Value("e");
+	auto f = circuit.Value("f");
+	auto g = circuit.Value("g");
+	auto h = circuit.Value("h");
+	auto i = circuit.Value("i");
+	auto x = circuit.Value("x");
+	auto y = circuit.Value("y");
+
+
+	if( d != 72
+	|| e != 507
+	|| f != 492
+	|| g != 114
+	|| h != 65412
+	|| i != 65079
+	|| x != 123
+	|| y != 456
+	)
+	{
+		int a = 0;
+	}
+	/*/
 	
-	int a = 0;
+	int result = circuit.Value("a");
+
+
+	std::string strwire = std::to_string(result) + "->b";
+
+	auto newwire = TWire::Create_Wire(strwire);
+
+	if(newwire)
+	{
+		circuit.ReplaceWire(std::move(newwire.value()));
+	}
+
+	/**/
+
+// 	uint16_t d = 72;
+// 	uint16_t e = 507;
+// 	uint16_t f = 492;
+// 	uint16_t g = 114;
+// 	uint16_t h = 65412;
+// 	uint16_t i = 65079;
+// 	uint16_t x = 123;
+// 	uint16_t y = 456;
 
 }
-
 
 }

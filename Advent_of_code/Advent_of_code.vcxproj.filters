@@ -54,6 +54,18 @@
     <ClInclude Include="2015\Day_07\Day_07.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Utils\String_Utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="2015\Day_07\TNodes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="2015\Day_07\TWire.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="2015\Day_07\TCircuit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -84,6 +96,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="2015\Day_07\Day_07.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="2015\Day_07\TNodes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="2015\Day_07\TWire.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="2015\Day_07\TCircuit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
