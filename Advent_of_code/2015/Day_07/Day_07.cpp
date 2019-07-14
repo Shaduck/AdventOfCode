@@ -5,6 +5,8 @@
 
 #include <fstream>
 
+#include "TCircuit.h"
+ 
 // #include <boost/algorithm/string.hpp>
 // #include <boost/tokenizer.hpp>
 
@@ -41,7 +43,7 @@ void CalcSolution()
 
 	TCircuit circuit;
 
-	/**
+	/**/
 	std::istringstream stream(teststr);
 	/*/
 	std::ifstream stream("2015/Day_07/input.txt");
@@ -51,11 +53,11 @@ void CalcSolution()
 	{
 		std::getline(stream, str);
 
-		auto currwire = TWire::Create_Wire(str);
+		auto currwire = BWire::Create_Wire(str);
 
 		if(currwire)
 		{
-			circuit.AddWire(std::move(*currwire));
+			circuit.AddWire(std::move(currwire));
 		}
 	}
 
@@ -91,12 +93,14 @@ void CalcSolution()
 
 	std::string strwire = std::to_string(result) + "->b";
 
-	auto newwire = TWire::Create_Wire(strwire);
+	auto newwire = BWire::Create_Wire(strwire);
 
 	if(newwire)
 	{
-		circuit.ReplaceWire(std::move(newwire.value()));
+		circuit.ReplaceWire(std::move(newwire));
 	}
+
+	int result2 = circuit.Value("a");
 
 	/**/
 

@@ -159,7 +159,12 @@
     <ClInclude Include="2015\Day_06\Day_06.h" />
     <ClInclude Include="2015\Day_07\Day_07.h" />
     <ClInclude Include="2015\Day_07\TCircuit.h" />
-    <ClInclude Include="2015\Day_07\TNodes.h" />
+    <ClInclude Include="2015\Day_07\TNodes.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="2015\Day_07\TWire.h" />
     <ClInclude Include="Utils\global.h" />
     <ClInclude Include="Utils\md5.h" />
@@ -176,7 +181,12 @@
       <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdcpp17</LanguageStandard>
     </ClCompile>
     <ClCompile Include="2015\Day_07\TCircuit.cpp" />
-    <ClCompile Include="2015\Day_07\TNodes.cpp" />
+    <ClCompile Include="2015\Day_07\TNodes.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="2015\Day_07\TWire.cpp" />
     <ClCompile Include="Advent_of_code.cpp" />
     <ClCompile Include="2015\Day_02\Day_02.cpp" />

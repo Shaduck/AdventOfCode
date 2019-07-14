@@ -1,28 +1,34 @@
 #include "TCircuit.h"
 
-#include <boost/algorithm/string.hpp>
-#include <boost/tokenizer.hpp>
+//#include <boost/algorithm/string.hpp>
+//#include <boost/tokenizer.hpp>
 
 namespace nsDay07
 {
 
 
+TCircuit::TCircuit()
+//	: m_ListFirstUnlinked (m_WiresList.end())
+{
+
+}
+
 //void TCircuit::AddLine(const std::string pstr)
-bool TCircuit::AddWire(TWire &&pwire)
+bool TCircuit::AddWire(std::unique_ptr<BWire> &&pwire)
 {
 //	auto currwire = TWire::Create_Wire(pstr);
 
-	for(const auto &curr: m_UnlinkedWires)
-	{
-		if(curr.Name() == pwire.Name())
-		{
-			return false;
-		}
-	}
+// 	for(const auto &curr: m_UnlinkedWires)
+// 	{
+// 		if(curr.Name() == pwire.Name())
+// 		{
+// 			return false;
+// 		}
+// 	}
 
-	for (const auto &curr : m_WorkingWires)
+	for (const auto &curr : m_WiresList)
 	{
-		if (curr.Name() == pwire.Name())
+		if (curr->Name() == pwire->Name())
 		{
 			return false;
 		}
@@ -38,73 +44,87 @@ bool TCircuit::AddWire(TWire &&pwire)
 // 	{
 // 		_UpdateWires();
 // 	}
+
+	return true;
 }
 
 
-bool TCircuit::ReplaceWire(TWire &&pwire)
+bool TCircuit::ReplaceWire(std::unique_ptr<BWire> &&pwire)
 {
 	auto found = false;
 
-	for (const auto &curr : m_WorkingWires)
+	for (const auto &curr : m_WiresList)
 	{
-		if (curr.Name() == pwire.Name())
+		if (curr->Name() == pwire->Name())
 		{
-			return false;
+			found = true;
 		}
 	}
 
-	for (const auto &curr : m_UnlinkedWires)
+	if(!found)
 	{
-		if (curr.Name() == pwire.Name())
-		{
-					
-		}
+		return false;
 	}
 
-	return false;
+	_RemoveWire(pwire->Name());
+
+	_InsertWire(std::move(pwire));
+	
+	for (auto &curr : m_WiresList)
+	{
+		curr->ForceRecalc();
+	}
+
+	return true;
 }
 
 uint16_t TCircuit::Value(std::string const &pwire)
 {
-	const auto res = _Find(pwire);
+	const auto res = _FindWire(pwire);
 	if (res == nullptr
-		 || res->Node() == nullptr)
+		 || !res->IsLinked())		//  Node() == nullptr)
 	{
 		return 0;
 	}
 
-	return res->Node()->Value(1);
+//	return res->Node()->Value(1);
+	return res->Value(1);
 }
 
-TWire *TCircuit::_Find(std::string const &pname)
+const BWire *TCircuit::_FindWire(std::string const &pname)
 {
-	auto res = std::find_if(m_WorkingWires.begin(), m_WorkingWires.end(),
-									[&pname](nsDay07::TWire const &pa) { return (pa.Name() == pname); });
-	if (res == m_WorkingWires.end())
+	auto res = std::find_if(m_WiresList.begin(), m_WiresList.end(),
+									[&pname](const std::unique_ptr<nsDay07::BWire> &pa) { return (pa->Name() == pname); });
+	if (res == m_WiresList.end())
 	{
 		return nullptr;
 	}
 
-	return res.operator->();
+	return res->get();
 }
 
-void TCircuit::_FindWorkingWires()
-{
-	auto iter = m_UnlinkedWires.begin();
-
-	while( iter != m_UnlinkedWires.end())
-	{
-		if(iter->IsInputLinked())
-		{
-			m_WorkingWires.push_back(std::move(*iter));
-			iter = m_UnlinkedWires.erase(iter);
-		}
-		else
-		{
-			++iter;
-		}
-	}
-}
+// void TCircuit::_FindWorkingWires()
+// {
+// //	auto iter = m_UnlinkedWires.begin();
+// 	auto iter = m_ListFirstUnlinked;
+// 
+// //	while( iter != m_UnlinkedWires.end())
+// 	while( iter != m_WiresList.end())
+// 	{
+// 		if(iter->IsInputLinked())
+// 		{
+// //			m_WiresList.push_back(std::move(*iter));
+// 			std::swap(*m_ListFirstUnlinked, *iter);
+// //			iter = m_UnlinkedWires.erase(iter);
+// //			iter = m_WiresList.erase(iter);
+// 			++ m_ListFirstUnlinked;
+// 		}
+// //		else
+// //		{
+// 			++iter;
+// //		}
+// 	}
+// }
 
 // std::string ExtractToken(std::string &pstr, std::string const &delim)
 // {
@@ -143,32 +163,82 @@ void TCircuit::_FindWorkingWires()
 // 	return true;
 // }
 
-void TCircuit::_InsertWire(TWire &&pwire)
+
+void TCircuit::_InsertWire(std::unique_ptr<BWire> &&pwire)
 {
-	for (auto &curr : m_UnlinkedWires)
+
+	for (auto &curr : m_WiresList)
 	{
-		pwire.CheckLink_Input_Wire(curr);
-		curr.CheckLink_Input_Wire(pwire);
-		//_CalcNode(curr);
+		pwire->CheckLink_Input_Node(curr.get());
+
+		if (!curr->IsLinked())
+		{
+			curr->CheckLink_Input_Node(pwire.get());
+		}
 	}
 
-	for (const auto &curr : m_WorkingWires)
-	{
-		pwire.CheckLink_Input_Wire(curr);
-	}
+	m_WiresList.push_back(std::move(pwire));
 
-	m_UnlinkedWires.push_back(std::move(pwire));
+	_SortWireList();
 
-	_FindWorkingWires();
 
-// 	for (auto &curr : m_Circuit)
+// 	for (auto curr = m_ListFirstUnlinked; curr != m_WiresList.end(); ++curr)
 // 	{
-// 		if (curr.Node() == nullptr)
-// 		{
-// 			_CalcNode(curr);
-// 		}
+// 		curr->CheckLink_Input_Wire(pwire);
 // 	}
+// 
+// 	for (const auto &curr : m_WiresList)
+// 	{
+// 		pwire.CheckLink_Input_Wire(curr);
+// 	}
+// 
+// 	m_WiresList.push_back(std::move(pwire));
+// 
+// 	if(m_WiresList.size() == 1)
+// 	{
+// 		m_ListFirstUnlinked = m_WiresList.begin();
+// 	}
+// 
+// 	_FindWorkingWires();
+
 }
 
+
+void TCircuit::_RemoveWire(const std::string &pwname)
+{
+	auto wfind = std::find_if(m_WiresList.begin(), m_WiresList.end()
+				 , [pwname](const TWirePtr &pv) { return (pv->Name() == pwname); });
+
+	_RemoveWire(wfind);
+}
+
+void TCircuit::_RemoveWire(const TWiresVector::const_iterator &piter)
+{
+	if (piter == m_WiresList.end())
+	{
+		return;
+	}
+
+	const auto wireptr	= (*piter).get();
+	
+	for (auto &curr : m_WiresList)
+	{
+		curr->Unlink(wireptr);
+	}
+
+	m_WiresList.erase(piter);
+
+	_SortWireList();
+}
+
+void TCircuit::_SortWireList()
+{
+	std::sort(m_WiresList.begin(), m_WiresList.end()
+			  , [](const std::unique_ptr<BWire> &p1, const std::unique_ptr<BWire> &p2)
+			  {
+				  return (p1->Level() < p2->Level());
+			  }
+			);
+}
 
 }

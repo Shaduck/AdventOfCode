@@ -8,42 +8,100 @@
 
 #include "TWire.h"
 
-#include <optional>
+//#include <optional>
+#include <vector>
 
 namespace nsDay07
 {
 
+
 class TCircuit
 {
 
+	using TWirePtr = std::unique_ptr<BWire>;
+	using TWiresVector = std::vector<TWirePtr>;
 
 public:
 
-	TCircuit()												{}
+	TCircuit();
 
 //	void AddLine(std::string pstr);
-	bool AddWire(TWire &&pwire);
-	bool ReplaceWire(TWire &&pwire);
+	bool AddWire(std::unique_ptr<BWire> &&pwire);
+	bool ReplaceWire(std::unique_ptr<BWire> &&pwire);
 
 	uint16_t Value(std::string const &pwire);
 
 private:
 
-	TWire *_Find(std::string const &pname);
+	const BWire *_FindWire(std::string const &pname);
 
 //	bool _ParseWire(std::string pline);
 
-	void _FindWorkingWires();
+//	void _FindWorkingWires();
 
-	void _InsertWire(TWire &&pwire);
+	// Inserisce un Wire nel circuito. Se esiste un'altro con lo stesso nome lo sostituisce
+	void _InsertWire(std::unique_ptr<BWire> &&pwire);
+	void _RemoveWire(const std::string &pwname);
+	void _RemoveWire(const TWiresVector::const_iterator &piter);
+
+	void _SortWireList();
 
 //	void _CalcNode(TWire &pwire);
 
 private:
 
-	std::vector<TWire> m_UnlinkedWires;
+// 	class TPtrWire
+// 	{
+// 
+// 	public:
+// 
+// 		TPtrWire(std::unique_ptr<BWire> &&pptrwire) : m_PtrWire{ std::move(pptrwire) } {}
+// 
+// 		const std::string &Name() const { return m_PtrWire->Name(); }
+// 		uint16_t Value(int plvl) const { return m_PtrWire->Value(plvl); }
+// 		//const BWire *Ptr() const						{ return m_PtrWire.get(); }
+// 
+// 		const BWire *get() const { return m_PtrWire.get(); }
+// 		BWire *get() { return m_PtrWire.get(); }
+// 
+// 		const BWire *operator ->() const { return m_PtrWire.get(); }
+// 		BWire *operator ->() { return m_PtrWire.get(); }
+// 
+// 		const BWire &operator *() const { return *m_PtrWire; }
+// 		BWire &operator *() { return *m_PtrWire; }
+// 
+// 
+// 		/// COMPARISONS
+// 
+// 		friend bool operator < (const TPtrWire &pv1, const TPtrWire &pv2)
+// 		{
+// 			return (pv1.m_PtrWire->Level() < pv2.m_PtrWire->Level());
+// 		}
+// 
+// 		friend bool operator < (const TPtrWire &pv1, int pv2)
+// 		{
+// 			return (pv1.m_PtrWire->Level() < pv2);
+// 		}
+// 
+// 		friend bool operator < (int pv1, const TPtrWire &pv2)
+// 		{
+// 			return (pv1 < pv2.m_PtrWire->Level());
+// 		}
+// 
+// 	private:
+// 
+// 		std::unique_ptr<BWire> m_PtrWire;
+// 	};
 
-	std::vector<TWire> m_WorkingWires;
+private:
+
+//	std::vector<TWire> m_UnlinkedWires;
+
+//	std::vector<TPtrWire> m_WiresList;
+	TWiresVector m_WiresList;
+
+//	std::vector<TWire>::iterator m_ListFirstUnlinked;
+
 };
 
 }

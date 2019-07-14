@@ -4,6 +4,8 @@
 
 #pragma once
 
+#error "*** Included file: 'TNodes.h' ***"
+
 //#include <array>
 #include <vector>
 #include <string>
@@ -113,6 +115,23 @@ protected:
 			return m_CachedValue;
 		}
 
+		int Level() const
+		{
+			if(m_NameInput.empty())
+			{
+				return 1;
+			}
+
+			if(m_Link)
+			{
+				m_Link->Level() + 1;
+			}
+			else
+			{
+				return 0;
+			}
+		}
+
 	private:
 
 		void _CheckString()
@@ -159,6 +178,8 @@ public:
 	virtual uint16_t Value(int lvl) const = 0;
 
 	virtual bool IsInputLinked() const = 0;
+
+	virtual int Level() const = 0;
 
 	virtual bool CheckLink_Input_Node(TNode_Base const *pnode) = 0;
 
@@ -275,6 +296,7 @@ public:
 
 	virtual bool IsInputLinked() const override				{ return m_Input.Is_Linked(); }
 
+	virtual int Level() const override							{ return m_Input.Level(); }
 
 	virtual bool CheckLink_Input_Node(TNode_Base const *pnode) override		
 																			{ return m_Input.CheckSet_Link(pnode); }
@@ -307,6 +329,8 @@ public:
 
 	virtual bool CheckLink_Input_Node(TNode_Base const *pnode) override		{ return m_Input.CheckSet_Link(pnode); }
 
+	virtual int Level() const override													{ return m_Input.Level(); }
+
 private:
 
 	TNode_Base::_TNodeIn m_Input;
@@ -335,7 +359,9 @@ public:
 
 	virtual uint16_t Value(int lvl) const override			{ return (m_Input_1.Value(lvl + 1) & m_Input_2.Value(lvl + 1)); }
 
-	virtual bool IsInputLinked() const override		{ return (m_Input_1.Is_Linked() && m_Input_2.Is_Linked()); }
+	virtual bool IsInputLinked() const override				{ return (m_Input_1.Is_Linked() && m_Input_2.Is_Linked()); }
+
+	virtual int Level() const override							{ return m_Input.Level(); }
 
 	virtual bool CheckLink_Input_Node(TNode_Base const *pnode) override { return (m_Input_1.CheckSet_Link(pnode)
 																											|| m_Input_2.CheckSet_Link(pnode)); }

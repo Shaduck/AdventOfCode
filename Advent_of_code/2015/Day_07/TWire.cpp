@@ -1,3 +1,4 @@
+
 #include "TWire.h"
 
 #include <boost/algorithm/string.hpp>
@@ -6,11 +7,13 @@
 namespace nsDay07
 {
 
-std::optional<nsDay07::TWire> TWire::Create_Wire(std::string pline)
+//std::optional<nsDay07::TWire> TWire::Create_Wire(std::string pline)
+std::unique_ptr<BWire> BWire::Create_Wire(std::string pline)
 {
 	if(pline.empty())
 	{
-		return std::optional<TWire>();
+//		return std::optional<TWire>();
+		return nullptr;
 	}
 
 	const auto posarrow = pline.find("->");
@@ -20,13 +23,16 @@ std::optional<nsDay07::TWire> TWire::Create_Wire(std::string pline)
 		// Invalid row
 		//		return false;
 
-		TWire workwire(boost::trim_copy(pline.substr(posarrow + 2))
-							, boost::trim_copy(pline.substr(0, posarrow)));
+// 		TWire workwire(boost::trim_copy(pline.substr(posarrow + 2))
+// 							, boost::trim_copy(pline.substr(0, posarrow)));
+// 
+// 		if(workwire._CalcWire())
+// 		{
+// 			return workwire;
+// 		}
 
-		if(workwire._CalcNode())
-		{
-			return workwire;
-		}
+		return _CalcWire(boost::trim_copy(pline.substr(posarrow + 2))
+							  , boost::trim_copy(pline.substr(0, posarrow)));
 
 	}
 
@@ -38,17 +44,20 @@ std::optional<nsDay07::TWire> TWire::Create_Wire(std::string pline)
 	// 	boost::trim(locwire.Operation);
 
 
-	return std::optional<TWire>();
+//	return std::optional<TWire>();
+	return nullptr;
 }
 
-bool TWire::CheckLink_Input_Wire(const TWire &pwire)
-{
-	return m_Node->CheckLink_Input_Node(pwire.m_Node.get());
-}
+// bool TWire::CheckLink_Input_Wire(const TWire &pwire)
+// {
+// 	return m_Node->CheckLink_Input_Node(pwire.m_Node.get());
+// }
 
-bool TWire::_CalcNode()
+std::unique_ptr<BWire> BWire::_CalcWire(const std::string &pname
+													 , const std::string &poper
+													)
 {
-	auto tmpstr = m_Operation;
+	auto tmpstr = poper;				//m_Operation;
 
 	auto pos = tmpstr.find(' ');
 
@@ -63,8 +72,11 @@ bool TWire::_CalcNode()
 // 		}
 // 		else
 //		{
-		auto locnode = std::make_unique<TNode_Link>(m_Name, tmpstr);
-		_Set_Node(std::move(locnode));
+
+		return std::make_unique<TWire_Link>(pname, tmpstr);
+
+// 		auto locnode = std::make_unique<TWire_Link>(pname, tmpstr);
+// 		_Set_Node(std::move(locnode));
 
 // 			auto parent = _Find(tmpstr);
 // 
@@ -77,7 +89,7 @@ bool TWire::_CalcNode()
 
 //		}
 
-		return true;
+//		return true;
 	}
 
 	auto firststr = tmpstr.substr(0, pos);
@@ -85,14 +97,16 @@ bool TWire::_CalcNode()
 
 	if(firststr.empty())
 	{
-		return false;
+		return nullptr;		// false;
 	}
 
 	if (firststr == "NOT")
 	{
 		// Operazione NOT
-		auto locnode = std::make_unique<TNode_NOT>(m_Name, tmpstr);
-		_Set_Node(std::move(locnode));
+		return std::make_unique<TWire_NOT>(pname, tmpstr);
+
+// 		auto locnode = std::make_unique<TNode_NOT>(m_Name, tmpstr);
+// 		_Set_Node(std::move(locnode));
 		
 // 		auto parent = _Find(tmpstr);
 // 
@@ -103,7 +117,7 @@ bool TWire::_CalcNode()
 // 			pwire.Set_Node(std::move(locnode));
 // 		}
 
-		return true;
+//		return true;
 	}
 
 	pos = tmpstr.find(' ');
@@ -112,7 +126,7 @@ bool TWire::_CalcNode()
 
 	if(secondstr.empty())
 	{
-		return false;
+		return nullptr;		//false;
 	}
 
 // 	auto firstparent = _Find(firststr);
@@ -129,18 +143,23 @@ bool TWire::_CalcNode()
 		auto offset = std::stoul(secondstr);
 		
 //		auto locnode = std::make_unique<TNode_LSHIFT>(firstparent->Node(), offset);
-		auto locnode = std::make_unique<TNode_LSHIFT>( m_Name, firststr, offset);
-		_Set_Node(std::move(locnode));
-		return true;
+	
+		return std::make_unique<TWire_LSHIFT>( pname, firststr, offset);
+// 		auto locnode = std::make_unique<TNode_LSHIFT>( m_Name, firststr, offset);
+// 		_Set_Node(std::move(locnode));
+// 		return true;
 	}
 
 	if (oper == "RSHIFT")
 	{
 		auto offset = std::stoul(secondstr);
 //		auto locnode = std::make_unique<TNode_RSHIFT>(firstparent->Node(), offset);
-		auto locnode = std::make_unique<TNode_RSHIFT>(m_Name, firststr, offset);
-		_Set_Node(std::move(locnode));
-		return true;
+
+		return std::make_unique<TWire_RSHIFT>(pname, firststr, offset);
+
+// 		auto locnode = std::make_unique<TNode_RSHIFT>(m_Name, firststr, offset);
+// 		_Set_Node(std::move(locnode));
+// 		return true;
 	}
 
 // 	auto secondparent = _Find(secondstr);
@@ -155,19 +174,22 @@ bool TWire::_CalcNode()
 	if (oper == "AND")
 	{
 //		auto locnode = std::make_unique<TNode_AND>(firstparent->Node(), secondparent->Node());
-		auto locnode = std::make_unique<TNode_AND>(m_Name, firststr, secondstr);
-		_Set_Node(std::move(locnode));
-		return true;
+		return std::make_unique<TWire_AND>(pname, firststr, secondstr);
+// 		auto locnode = std::make_unique<TNode_AND>(m_Name, firststr, secondstr);
+// 		_Set_Node(std::move(locnode));
+// 		return true;
 	}
 	if (oper == "OR")
 	{
 //		auto locnode = std::make_unique<TNode_OR>(firstparent->Node(), secondparent->Node());
-		auto locnode = std::make_unique<TNode_OR>(m_Name, firststr, secondstr);
-		_Set_Node(std::move(locnode));
-		return true;
+		return std::make_unique<TWire_OR>(pname, firststr, secondstr);
+// 		auto locnode = std::make_unique<TNode_OR>(m_Name, firststr, secondstr);
+// 		_Set_Node(std::move(locnode));
+// 		return true;
 	}
 
-	return false;
+	return nullptr;	// false;
 }
+
 
 }

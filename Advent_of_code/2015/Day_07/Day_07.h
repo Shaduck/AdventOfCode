@@ -10,7 +10,7 @@
 // #include <array>
 //#include <memory>
 //#include "TWire.h"
-#include "TCircuit.h"
+//#include "TCircuit.h"
 
 namespace nsDay07
 {
@@ -28,5 +28,5 @@ void CalcSolution();
 
 }
 
-#endif // Day2_h__
+#endif // Day7_h__
 
